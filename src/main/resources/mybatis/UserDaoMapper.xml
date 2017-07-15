@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wallace.demo.springmvc.dao.UserDao">
+    <resultMap id="userMap" type="com.wallace.demo.springmvc.model.User">
+        <id property="id" column="id"/>
+        <result property="version" column="version" />
+        <result property="accountExpired" column="account_expired" />
+        <result property="accountLocked" column="account_locked" />
+        <result property="enabled" column="enabled" />
+        <result property="password" column="password" />
+        <result property="passwordExpired" column="password_expired" />
+        <result property="username" column="username" />
+        <result property="realName" column="real_name" />
+    </resultMap>
+    <insert id="saveUser"
+            parameterType="com.wallace.demo.springmvc.model.User"
+            flushCache="true"
+            keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO `user`
+        (version, account_expired, account_locked, enabled, password, password_expired, username, real_name)
+        VALUES
+        (#{version}, #{accountExpired}, #{accountLocked},#{enabled},#{password},#{passwordExpired},#{username},#{realName})
+        ON DUPLICATE KEY UPDATE
+        version = version + 1,
+        username = #{username},
+        password = #{password},
+        password_expired = #{passwordExpired},
+        enabled = #{enabled},
+        account_expired = #{accountExpired},
+        account_locked = #{accountLocked},
+        real_name = #{realName}
+    </insert>
+    <delete id="deleteUser" parameterType="com.wallace.demo.springmvc.model.User">
+        DELETE FROM `user` where id = #{id}
+    </delete>
+    <update id="updateUser"
+            parameterType="com.wallace.demo.springmvc.model.User"
+            flushCache="true"
+            keyProperty="id">
+        UPDATE `user` SET
+        version = version + 1,
+        username = #{username},
+        password = #{password},
+        password_expired = #{passwordExpired},
+        enabled = #{enabled},
+        account_expired = #{accountExpired},
+        account_locked = #{accountLocked},
+        real_name = #{realName}
+        WHERE id = #{id}
+    </update>
+    <select id="getUserList" resultMap="userMap">
+        SELECT * FROM `user`
+    </select>
+    <select id="getUserById" resultMap="userMap">
+        SELECT * FROM `user` WHERE id = #{id}
+    </select>
+</mapper>

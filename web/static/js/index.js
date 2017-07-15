@@ -1,0 +1,1 @@
+document.getElementById("helloDiv").innerHTML = "I am from js";
